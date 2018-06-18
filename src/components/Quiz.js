@@ -5,6 +5,13 @@ import QuestionCount from './QuestionCount'
 import AnswerOption from './AnswerOption'
 
 class Quiz extends React.Component {
+
+    constructor(props) {
+        super(props);
+
+        this.renderAnswerOptions = this.renderAnswerOptions.bind(this);
+    }
+
     renderAnswerOptions(key) {
         return (
           <AnswerOption
