@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import '../sass/components/answer-option.scss';
 
   class AnswerOption extends React.Component {
     render() {

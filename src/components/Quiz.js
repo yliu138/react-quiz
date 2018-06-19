@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Question from './Question'
-import QuestionCount from './QuestionCount'
-import AnswerOption from './AnswerOption'
+import Question from './Question';
+import QuestionCount from './QuestionCount';
+import AnswerOption from './AnswerOption';
+import '../sass/components/quiz.scss';
 
 class Quiz extends React.Component {
 
