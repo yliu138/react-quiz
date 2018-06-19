@@ -93,6 +93,7 @@
     "extends": "react-app"
   },
   "devDependencies": {
+    "autoprefixer": "^7.1.6",
     "node-sass": "^4.9.0",
     "sass-loader": "^7.0.3"
   }
