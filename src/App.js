@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.scss';
 import Quiz from './components/Quiz';
+import Result from './components/Result';
 import quizQuestions from './api/quizQuestions';
 import update from 'react-addons-update';
 
@@ -26,10 +27,46 @@ class App extends Component {
    this.handleAnswerSelected = this.handleAnswerSelected.bind(this);
  }
 
+ setResults (result) {
+    if (result.length === 1) {
+      this.setState({ result: result[0] });
+    } else {
+      this.setState({ result: 'Undetermined' });
+    }
+  }
+
+ getResults() {
+    const answersCount = this.state.answersCount;
+    const answersCountKeys = Object.keys(answersCount);
+    const answersCountValues = answersCountKeys.map((key) => answersCount[key]);
+    const maxAnswerCount = Math.max.apply(null, answersCountValues);
+
+    return answersCountKeys.filter((key) => answersCount[key] === maxAnswerCount);
+  }
+
+ setNextQuestion() {
+   const counter = this.state.counter + 1;
+   const questionId = this.state.questionId + 1;
+   this.setState({
+     counter,
+     questionId,
+     question: quizQuestions[counter].question,
+     answerOptions: quizQuestions[counter].answers,
+     answer: ''
+   });
+ }
+
  setUserAnswer(answer) {
+   // Update API actually create a new object e.g. updatedAnswersCount rahter than
+   // modify the original state model directly
+   // this helps track a list of user attempted rather than just only one final answer
+   // Don't change the state directly as calling setState() afterwards might replace the change you made
+   // To change the answer value to lower case
+   answer = answer.toLowerCase();
     const updatedAnswersCount = update(this.state.answersCount, {
       [answer]: {$apply: (currentValue) => currentValue + 1}
     });
+    // The DOM will not be re-rendered until we call setState
     this.setState({
       answersCount: updatedAnswersCount,
       answer: answer
@@ -41,7 +78,7 @@ class App extends Component {
     if (this.state.questionId < quizQuestions.length) {
         setTimeout(() => this.setNextQuestion(), 300);
       } else {
-        // do nothing for now
+        setTimeout(() => this.setResults(this.getResults()), 300);
       }
   }
 
@@ -72,6 +109,29 @@ class App extends Component {
    });
  }
 
+ // To reqnder the quiz
+ renderQuiz() {
+   return (
+     <Quiz
+       answer={this.state.answer}
+       answerOptions={this.state.answerOptions}
+       questionId={this.state.questionId}
+       question={this.state.question}
+       questionTotal={quizQuestions.length}
+       onAnswerSelected={this.handleAnswerSelected}
+       counter={quizQuestions.length}
+     />
+  );
+ }
+
+ renderResult() {
+   return (
+     <Result
+       quizResult={this.state.result}
+     />
+   )
+ }
+
   render() {
     return (
       <div className="App">
@@ -79,14 +139,7 @@ class App extends Component {
           <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">React Quiz</h1>
         </header>
-        <Quiz
-          answer={this.state.answer}
-          answerOptions={this.state.answerOptions}
-          questionId={this.state.questionId}
-          question={this.state.question}
-          questionTotal={quizQuestions.length}
-          onAnswerSelected={this.handleAnswerSelected}
-        />
+        {this.state.result ? this.renderResult() : this.renderQuiz()}
       </div>
     );
   }
