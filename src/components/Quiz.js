@@ -27,6 +27,11 @@ class Quiz extends React.Component {
     }
 
     render() {
+      const optionAr = [];
+      for (const optionObj of this.props.answerOptions) {
+        optionAr.push(this.renderAnswerOptions(optionObj));
+      }
+      // i.e. should return an array that can assemble a list of react elements
       return (
          <div className="quiz">
            <QuestionCount
@@ -35,7 +40,7 @@ class Quiz extends React.Component {
            />
            <Question content={this.props.question} />
            <ul className="answerOptions">
-             {this.props.answerOptions.map(this.renderAnswerOptions)}
+             {optionAr}
            </ul>
          </div>
       );

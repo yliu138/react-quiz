@@ -17,7 +17,7 @@ import '../sass/components/answer-option.scss';
             onChange={this.props.onAnswerSelected}
           />
           <label className="radioCustomLabel" htmlFor={this.props.answerType}>
-            {this.props.answerContent}
+            <div>{this.props.answerContent}</div>
           </label>
         </li>
       );
